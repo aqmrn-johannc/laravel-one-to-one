@@ -9,10 +9,16 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $students = Student::with('academic', 'country')->get();
         // return response()->json(['Student-Info' => $students]);
-        return view('category.index',['students'=> $students]);
+        if ($request->is('api/*')) {
+            return response()->json(['students' => $students]);
+        } else {
+            $students = Student::all();
+            return view('category.index',['students'=> $students]);
+        }
+
     }
 
     public function create()
